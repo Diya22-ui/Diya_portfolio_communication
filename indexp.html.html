@@ -1,0 +1,1607 @@
+
+<!doctype html>
+<html lang="fr" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Diya BHAVSAR</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    .smooth-transition {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.15; }
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .nav-link {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .project-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .sticker {
+      position: absolute;
+      animation: float 4s ease-in-out infinite;
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-in;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 24px;
+      max-width: 1000px;
+      width: 95%;
+      max-height: 95vh;
+      overflow-y: auto;
+      animation: slideUp 0.4s ease-out;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-content::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    .modal-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #F574AB;
+      border-radius: 10px;
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb:hover {
+      background: #E55A9B;
+    }
+    
+    #contactForm::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    #contactForm::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    #contactForm::-webkit-scrollbar-thumb {
+      background: #F574AB;
+      border-radius: 10px;
+    }
+    
+    #contactForm::-webkit-scrollbar-thumb:hover {
+      background: #E55A9B;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .filter-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full">
+  <div id="app" class="w-full h-full overflow-auto"></div>
+  <script>
+    const defaultConfig = {
+      background_color: "#FFFFFF",
+      surface_color: "#FFF5F9",
+      text_color: "#1A1A1A",
+      primary_action_color: "#F574AB",
+      secondary_action_color: "#A8DADC",
+      font_family: "Outfit",
+      font_size: 16,
+      prenom: "Diya",
+      nom: "BHAVSAR",
+      presentation_title: "Qui suis-je ?",
+      presentation_text: "Je m’appelle Diya Bhavsar, j’ai 20 ans. Diplômée d’un BTS Communication et actuellement en 3e année de BUT Information-Communication à l’IUT de Montreuil – Université Paris 8. Curieuse, attentive aux détails et créative, j’aime explorer de nouveaux domaines et apprendre en continu. Ma nature calme et réfléchie m’amène à travailler de manière organisée, précise et rigoureuse, tout en laissant place à la créativité.",
+      vision_title: "Mes objectifs professionnels",
+      vision_text: "Je souhaite poursuivre mes études en Master Communication pour approfondir mes connaissances et me spécialiser dans la communication digitale. Mon objectif est d'intégrer une agence de communication créative où je pourrai mettre en pratique mes compétences et contribuer à des projets innovants.",
+      telephone: "07.69.25.61.23",
+      email: "diyabhavsar.pro@gmail.com",
+      linkedin: "www.linkedin.com/in/diya-bhavsar"
+    };
+    
+    let currentPage = 'accueil';
+    let activeModal = null;
+    let currentFilter = 'Tous';
+    
+    const projects = [
+      {
+        id: 1,
+        nom: "Tinder x Ogilvy",
+        theme: ["360°"],
+        date: "Octobre 2023",
+        missionsList: [
+          "Participation à la réflexion stratégique",
+          "Définition du message et du concept créatif",
+          "Création de supports de communication",
+          "Travail en équipe sur une campagne 360°"
+        ],
+        objectif: "Créer une campagne de communication innovante pour promouvoir la diversité de genre auprès des jeunes.",
+        cible: "Jeunes de 18–25 ans, utilisateurs et non-utilisateurs de Tinder.",
+        image: "💖",
+        badge: "360°",
+        badgeColor: "#F574AB",
+        lienVisuel: "img/TinderXOgilvy.pdf"
+      },
+      {
+        id: 2,
+        nom: "Pressoirs de Provence",
+        theme: ["Digital"],
+        date: "Janvier 2024",
+        missionsList: [
+          "Analyse du marché, de la cible et de la concurrence",
+          "Élaboration d'une stratégie de communication digitale",
+          "Création de contenus adaptés aux supports numériques",
+          "Participation aux recommandations marketing"
+        ],
+        objectif: "Augmenter le chiffre d'affaires de la gamme citronnade grâce à une stratégie de communication digitale performante.",
+        cible: "Consommateurs de produits alimentaires, amateurs de boissons artisanales.",
+        image: "📱",
+        badge: "Digital",
+        badgeColor: "#FFD166",
+        lienVisuel: "img/PP.pdf"
+      },
+      {
+        id: 3,
+        nom: "Orange Day",
+        theme: ["Événementiel"],
+        date: "Novembre 2023",
+        missionsList: [
+          "Participation à la conception de la campagne événementielle",
+          "Création de supports de sensibilisation",
+          "Réflexion sur l'impact et le message sociétal",
+          "Travail collaboratif en équipe"
+        ],
+        objectif: "Sensibiliser à la lutte contre les violences faites aux femmes et aux filles à travers une campagne de communication au sein de l'ENC Bessières.",
+        cible: "Étudiants, personnel de l'établissement, public interne.",
+        image: "🎗️",
+        badge: "Événementiel",
+        badgeColor: "#FF6B35",
+        lienVisuel:"img/Orange Day.pdf"
+      },
+      {
+        id: 4,
+        nom: "Ambassade de Grèce",
+        theme: ["Web"],
+        date: "Janvier 2025",
+        missionsList: [
+          "Conception et structuration du site web sous WordPress",
+          "Organisation des contenus (recettes, produits, histoire)",
+          "Réflexion sur l'expérience utilisateur",
+          "Valorisation de l'identité culturelle grecque"
+        ],
+        objectif: "Promouvoir la gastronomie grecque en France à travers la création d'un site web informatif et immersif.",
+        cible: "Public français intéressé par la gastronomie, la culture et le tourisme grec.",
+        image: "🌐",
+        badge: "Web",
+        badgeColor: "#4ECDC4",
+        lienVisuel: "img/Webcom.pdf"
+
+      },
+      {
+        id: 5,
+        nom: "Decathlon x Ogilvy",
+        theme: ["360°"],
+        date: "Septembre 2024",
+        missionsList: [
+          "Construction d'un storytelling cohérent et engageant",
+          "Élaboration du message clé",
+          "Contribution à la stratégie de communication globale",
+          "Création de contenus en lien avec le récit"
+        ],
+        objectif: "Imaginer une campagne de communication autour des Jeux Olympiques 2025 afin de favoriser l'inclusion des personnes en situation de handicap.",
+        cible: "Grand public, amateurs de sport, communautés sensibles aux valeurs d'inclusion.",
+        image: "⚽",
+        badge: "360°",
+        badgeColor: "#A8DADC",
+        lienVisuel: "img/Decathlon.pdf"
+      },
+
+{
+  id: 6,
+  nom: "Michel et Augustin",
+  theme: ["360°"],
+  date: "Octobre 2025",
+  missionsList: [
+    "Conception d’une stratégie de communication 360°",
+    "Création d’un storytelling authentique et engageant",
+    "Déclinaison des supports de communication (print, digital, événementiel)",
+    "Gestion de projet et coordination des actions",
+  ],
+  objectif: "Relancer et faire connaître la gamme de sablés Michel et Augustin à travers une campagne 360° authentique et engageante, tout en respectant l’univers de marque et en séduisant un public jeune.",
+  cible:  "Jeunes actifs connectés en recherche d’authenticité et de plaisir sans culpabilité, consommateurs engagés sensibles aux initiatives de marque, ainsi que jeunes familles en quête de gourmandise équilibrée.",
+  image: "🍪",
+  badge: "360°",
+  badgeColor: "#F4C430",
+  lienVisuel: "img/MicheletAugustin.pdf"
+}, 
+{
+  id: 7,
+  nom: "IKEA",
+  theme: ["Durable"],
+  date: "2025",
+  missionsList: [
+    "Réalisation d’une veille approfondie et d’une analyse de marché sur les enjeux de la communication responsable",
+    "Analyse des pratiques de greenwashing et identification des attentes des consommateurs",
+    "Définition d’une stratégie de communication durable, cohérente et crédible",
+    "Conception de messages transparents valorisant les engagements réels d’IKEA",
+    "Proposition de supports de communication éco-conçus et respectueux de l’environnement",
+    "Travail en équipe sur l’ensemble de la réflexion stratégique"
+  ],
+  objectif: "Créer une campagne de communication engagée mettant en avant les initiatives écologiques d’IKEA, tout en évitant le greenwashing, afin de renforcer la crédibilité de la marque et d’encourager une consommation plus responsable.",
+  cible: "Jeunes adultes et familles (25–45 ans) déjà sensibilisés à l’écologie souhaitant consommer responsable sans renoncer au design et au prix ; clients IKEA occasionnels ou réguliers (18–55 ans) curieux de durabilité mais sensibles au prix et sceptiques face au greenwashing ; influenceurs et créateurs de contenu engagés (25–40 ans) capables de relayer et crédibiliser le message.",
+  image: "🌱",
+  badge: "Durable",
+  badgeColor: "#7FB685",
+  lienVisuel: "img/IKEA.pdf"
+}, 
+{
+  id: 8,
+  nom: "Nestlé - Buitoni",
+  theme: ["Crise"],
+  date: "2025",
+  missionsList: [
+    "Analyse approfondie de la crise et étude des différents médias",
+    "Élaboration d’une stratégie complète de communication de crise",
+    "Rédaction de communiqués de presse et d’éléments de langage",
+    "Mise en place de solutions de communication adaptées à chaque audience",
+    "Conseil de la direction pour la gestion des prises de parole publiques",
+    "Coordination avec les parties prenantes et partenaires commerciaux"
+  ],
+  objectif: "Conseiller la direction de Nestlé France et proposer une stratégie de communication de crise adaptée au cas Buitoni, afin de protéger la réputation de la marque tout en répondant de manière transparente et responsable aux différentes parties prenantes.",
+  cible: "Familles des victimes, autorités sanitaires et judiciaires, consommateurs, médias, salariés, distributeurs et partenaires commerciaux.",
+  image: "⚠️",
+  badge: "Crise",
+  badgeColor: "#D32F2F",
+  lienVisuel: "img/Nestle.pdf"
+},
+{
+  id: 9,
+  nom: "Maison Francis Kurkdjian",
+  theme: ["360°"],
+  date: "Décembre 2025",
+  missionsList: [
+    "Création d’un storytelling immersif autour du parfum « Grand Soir »",
+    "Élaboration d’une stratégie de communication 360°",
+    "Définition du budget et du rétroplanning de la campagne",
+    "Conception d’un spot vidéo teaser à l’aide de l’intelligence artificielle"
+  ],
+  objectif: "Création d’une campagne de communication 360° avec un accent sur la vidéo afin de renforcer le rayonnement de la marque au Moyen-Orient.",
+  cible: "Amateurs de parfums de niche, consommateurs haut de gamme et publics sensibles à l’univers du luxe.",
+  image: "🌙",
+  badge: "360°",
+  badgeColor: "#D35400",
+  lienVisuel: "img/MaisonFrancisKurkdjian.pdf"
+}, 
+{
+  id: 10,
+  nom: "Stade Toulousain",
+  theme: ["360°"],
+  date: "Janvier 2026",
+  missionsList: [
+    "Analyse approfondie du positionnement et de l’écosystème de la marque Stade Toulousain",
+    "Identification d’un axe stratégique et création d’un storytelling différenciant",
+    "Conception d’une recommandation de communication 360° à budget maîtrisé (600 000 €)",
+    "Proposition d’actions concrètes visant à renforcer la valeur immatérielle de la marque",
+    "Développement de pistes d’extension de marque au-delà du seul cadre sportif"
+  ],
+  objectif: "Formuler une recommandation stratégique permettant au Stade Toulousain de renforcer la valeur de sa marque et de devenir une référence mondiale, indépendamment des résultats sportifs.",
+  cible: "Grand public, supporters, partenaires économiques, institutions, publics internationaux et communautés non initiées au rugby.",
+  image: "🏉",
+  badge: "Branding",
+  badgeColor: "#8B0000",
+  lienVisuel: "img/StadeToulousain.pdf"
+},
+      {
+        id: 11,
+        nom: "Kreden",
+        theme: ["Branding"],
+        date: "Decembre 2025",
+        missionsList: [
+    "Études approfondies sur la marque et le marché extérieur",
+    "Identification de problématiques clés et opportunités",
+    "Proposition d’une nouvelle stratégie avec positionnement, message, grand message et signature",
+    "Recommandation complète avec KPI et plan d’action pour le rebranding"
+        ],
+        objectif:  "Proposer une recommandation stratégique complète pour le rebranding de Kreden, qui n’avait pas d’histoire de marque et était peu connu, afin de construire une identité forte et cohérente.",
+        cible: "Jeunes de 25–35 ans, conscients, responsables et désireux de se démarquer tout en adoptant une approche éthique et responsable.",
+        image: "👟",
+        badge: "Branding",
+        badgeColor: "#F574AB",
+        lienVisuel: "img/Kreden_Rebranding.pdf"
+      },
+
+    ];
+    
+    const formations = [
+      { titre: "BUT Information-Communication", lieu: "IUT de Montreuil", dates: "2025 - En cours" },
+      { titre: "BTS Communication", lieu: "ENC Bessières", dates: "2023 - 2025" },
+      { titre: "Baccalauréat Général", lieu: "Lycée Eugène Henaff, Bagnolet", dates: "2020 - 2023" }
+    ];
+    
+    const hardSkills = ["Stratégie de communication", "Analyse de marché", "Création de contenus", "Gestion de projet", "Rédaction web", "Design graphique"];
+    const softSkills = ["Créativité", "Travail d'équipe", "Organisation", "Adaptabilité", "Communication"];
+    const outils = [
+      { nom: "Canva", niveau: "Avancé" },
+      { nom: "Figma", niveau: "Débutante" },
+      { nom: "WIX", niveau: "Moyen" },
+      { nom: "WordPress", niveau: "Débutante" },
+      { nom: "Meta", niveau: "Moyen" },
+      { nom: "Réseaux sociaux", niveau: "Avancé" },
+      { nom: "Feedly", niveau: "Avancé" },
+      { nom: "Hootsuite", niveau: "Moyen" },
+      { nom: "Suite Microsoft", niveau: "Avancé" },
+      { nom: "ChatGPT", niveau: "Avancé" },
+      { nom: "Google Analytics", niveau: "Moyen" },
+      { nom: "Adobe Creative Suite", niveau: "Débutante" }
+    ];
+    const experiences = [
+      { 
+        poste: "Community Manager", 
+        entreprise: "SENO PROD", 
+        dates: "Novembre 2024", 
+        missions: [
+          "Proposition d'un refondement du compte Instagram (ligne éditoriale, visuels, stratégie)",
+          "Réalisation de contenus digitaux pour une formation en communication",
+          "Prise de vues (photo & vidéo) sur les tournages",
+          "Montage vidéo pour les réseaux sociaux"
+        ],
+        order: 1
+      },
+      { 
+        poste: "Chargée de communication", 
+        entreprise: "FISPE", 
+        dates: "Mai - Juin 2024", 
+        missions: [
+          "Création de supports de communication print et digitale",
+          "Gestion et publication de contenus sur Instagram et Facebook",
+          "Coordination et communication d'un spectacle"
+        ],
+        order: 2
+      }
+    ];
+    
+    const projetsScolaires = [
+      {
+        poste: "Chargée de communication",
+        entreprise: "Decathlon X Ogilvy",
+        dates: "Septembre 2024",
+        missions: [
+          "Analyse stratégique (veille, SWOT, analyse de la cible)",
+          "Élaboration de solutions de communication innovantes",
+          "Conception fictive d'un événement : concept, planning, canaux de diffusion"
+        ],
+        order: 1
+      },
+      {
+        poste: "Chargée de communication",
+        entreprise: "ENC Bessières - Orange Day",
+        dates: "Novembre 2023",
+        missions: [
+          "Conception de supports digitaux et print (posts LinkedIn, flyers)",
+          "Organisation de l'événement : logistique, devis, coordination",
+          "Communication autour de l'événement sur les réseaux"
+        ],
+        order: 2
+      },
+      {
+        poste: "Chargée de communication",
+        entreprise: "Tinder X Ogilvy",
+        dates: "Octobre 2023",
+        missions: [
+          "Veille des tendances et analyse des comportements de la cible",
+          "Définition d'une stratégie créative et digitale",
+          "Création de visuels et propositions d'actions événementielles"
+        ],
+        order: 3
+      }
+    ];
+    const langues = [
+      { langue: "Français", niveau: "Langue maternelle" },
+      { langue: "Hindi", niveau: "Langue maternelle" },
+      { langue: "Gujarati", niveau: "Langue maternelle" },
+      { langue: "Anglais", niveau: "B2 - Courant" },
+      { langue: "Espagnol", niveau: "A2 - Intermédiaire" }
+    ];
+    const interets = ["Photographie", "Danse", "Natation", "Lecture", "Méditation", "Voyages"];
+
+    async function onConfigChange(config) {
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      document.body.style.backgroundColor = backgroundColor;
+      document.body.style.color = textColor;
+      document.body.style.fontFamily = `${fontFamily}, sans-serif`;
+      
+      renderPage();
+    }
+    
+    function renderPage() {
+      const config = window.elementSdk?.config || defaultConfig;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      const app = document.getElementById('app');
+      
+      let content = '';
+      
+      if (currentPage === 'accueil') {
+        content = `
+          <div style="background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; min-height: 100%; position: relative;">
+            ${renderNav(config, fontFamily, baseFontSize, textColor, primaryColor)}
+            
+            <!-- Stickers décoratifs flottants -->
+            
+            <div class="fade-in" style="max-width: 1200px; margin: 0 auto; padding: 100px 32px 64px;">
+              
+              <!-- Hero Section avec nom à gauche et photo à droite -->
+              <section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; margin-bottom: 120px; min-height: 70vh;">
+                <div style="text-align: left;">
+                  <div style="display: inline-block; background-color: ${surfaceColor}; padding: 8px 20px; border-radius: 30px; margin-bottom: 24px; font-size: ${baseFontSize * 0.875}px; color: ${primaryColor}; font-weight: 600; border: 2px solid ${primaryColor};">
+                    Bienvenue sur mon portfolio
+                  </div>
+                  <h1 style="font-size: ${baseFontSize * 4}px; font-weight: 800; margin-bottom: 16px; color: ${textColor}; line-height: 1.1; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ${config.prenom || defaultConfig.prenom}<br>
+                    <span style="color: ${primaryColor};">${config.nom || defaultConfig.nom}</span>
+                  </h1>
+                  <p style="font-size: ${baseFontSize * 1.5}px; color: ${textColor}; font-weight: 600; margin-bottom: 12px; opacity: 0.9;">
+                    BUT Information-Communication
+                  </p>
+                  <p style="font-size: ${baseFontSize * 1.125}px; color: ${textColor}; opacity: 0.6; margin-bottom: 12px;">
+                    IUT de Montreuil · 3ème année
+                  </p>
+                  <p style="font-size: ${baseFontSize}px; color: #000000; font-weight: 400; margin-bottom: 40px;">
+  À la recherche d’un stage du 
+  <strong style="color: #F574AB; font-weight: 700;">
+    16 mars au 19 juin 2026
+  </strong>, 
+  je souhaite mettre mes compétences en communication événementielle et digitale 
+  au service de projets concrets, en apportant créativité et rigueur.
+                  </p>
+                  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <button onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })" class="smooth-transition" style="background-color: ${primaryColor}; color: white; border: none; border-radius: 50px; padding: 18px 36px; font-size: ${baseFontSize * 1.125}px; font-weight: 600; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 8px 24px rgba(245, 116, 171, 0.4);">
+                      Me découvrir
+                    </button>
+                </div>
+                </div>
+                
+                <!-- Photo à droite avec décorations -->
+                <div style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <div class="float-animation" style="width: 350px; height: 350px; border-radius: 50%; background : transparent; display: flex; align-items: center; justify-content: center; font-size: ${baseFontSize * 9}px; box-shadow: 0 25px 70px rgba(245, 116, 171, 0.35); position: relative; overflow: hidden;">
+                  <img 
+  src="img/MOI.png" 
+  alt="Photo de moi"
+  style="
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+     object-position: 80% 30%; /* <-- déplace l'image vers le haut */
+    border-radius: 50%;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  "
+>
+                  </div>
+                  
+                  <!-- Badges flottants -->
+                  <div class="smooth-transition" style="position: absolute; top: 10%; right: -10px; background-color: white; padding: 12px 24px; border-radius: 50px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); font-size: ${baseFontSize * 0.875}px; font-weight: 700; color: ${primaryColor}; border: 2px solid ${surfaceColor}; z-index: 10;">
+                    Disponible
+                  </div>
+                  <div class="smooth-transition" style="position: absolute; bottom: 15%; left: -20px; background-color: white; padding: 12px 24px; border-radius: 50px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); font-size: ${baseFontSize * 0.875}px; font-weight: 700; color: ${textColor}; border: 2px solid ${surfaceColor}; z-index: 10;">
+                    Stage 2026
+                  </div>
+                </div>
+              </section>
+              
+              <!-- Section À propos -->
+              <section id="about" style="margin-bottom: 100px;">
+                <div style="background: linear-gradient(135deg, ${surfaceColor}, white); border-radius: 24px; padding: 56px; max-width: 900px; margin: 0 auto; box-shadow: 0 10px 40px rgba(245, 116, 171, 0.1); position: relative; overflow: hidden; border: 3px solid ${primaryColor};">
+                  <div style="position: absolute; top: 20px; right: 20px; font-size: ${baseFontSize * 3}px; opacity: 0.2;"></div>
+                  <h2 style="font-size: ${baseFontSize * 2.25}px; font-weight: 700; margin-bottom: 24px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ${config.presentation_title || defaultConfig.presentation_title}
+                  </h2>
+                  <p style="font-size: ${baseFontSize * 1.125}px; line-height: 1.9; color: ${textColor};">
+                    ${config.presentation_text || defaultConfig.presentation_text}
+                  </p>
+                </div>
+              </section>
+              
+              <!-- Section Objectifs avec washi tape -->
+              <section style="margin-bottom: 100px;">
+                <div style="background-color: white; border-radius: 24px; padding: 56px; max-width: 900px; margin: 0 auto; box-shadow: 0 10px 40px rgba(168, 218, 220, 0.15); position: relative; border: 3px dashed ${secondaryColor};">
+                  <div style="position: absolute; top: -3px; left: 10%; width: 100px; height: 30px; background: repeating-linear-gradient(45deg, ${secondaryColor}, ${secondaryColor} 10px, transparent 10px, transparent 20px); opacity: 0.4;"></div>
+                  <h2 style="font-size: ${baseFontSize * 2.25}px; font-weight: 700; margin-bottom: 24px; color: ${secondaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ${config.vision_title || defaultConfig.vision_title}
+                  </h2>
+                  <p style="font-size: ${baseFontSize * 1.125}px; line-height: 1.9; color: ${textColor};">
+                    ${config.vision_text || defaultConfig.vision_text}
+                  </p>
+                </div>
+              </section>
+              
+              <!-- Cartes Navigation Interactive -->
+              <section style="margin-bottom: 80px;">
+                <h2 style="font-size: ${baseFontSize * 2.5}px; font-weight: 700; margin-bottom: 56px; text-align: center; color: ${textColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                  Découvrez mon univers
+                </h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; max-width: 1000px; margin: 0 auto;">
+                  
+                  <button onclick="navigateTo('projets')" class="smooth-transition project-card" style="background-color: white; color: ${textColor}; border: 3px solid ${primaryColor}; border-radius: 24px; padding: 56px 40px; font-size: ${baseFontSize * 1.375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 8px 30px rgba(245, 116, 171, 0.2); position: relative; overflow: hidden; text-align: center;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background-color: ${primaryColor}; opacity: 0.08; border-radius: 50%;"></div>
+                    <div style="font-size: ${baseFontSize * 3.5}px; margin-bottom: 20px;">📂</div>
+                    Mes Projets
+                    <div style="font-size: ${baseFontSize * 0.9}px; font-weight: 400; margin-top: 16px; opacity: 0.7; line-height: 1.5;">
+                      Découvrez mes réalisations en communication
+                    </div>
+                  </button>
+                  
+                  <button onclick="navigateTo('cv')" class="smooth-transition project-card" style="background-color: white; color: ${textColor}; border: 3px solid ${secondaryColor}; border-radius: 24px; padding: 56px 40px; font-size: ${baseFontSize * 1.375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 8px 30px rgba(168, 218, 220, 0.2); position: relative; overflow: hidden; text-align: center;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background-color: ${secondaryColor}; opacity: 0.08; border-radius: 50%;"></div>
+                    <div style="font-size: ${baseFontSize * 3.5}px; margin-bottom: 20px;">📄</div>
+                    Mon CV
+                    <div style="font-size: ${baseFontSize * 0.9}px; font-weight: 400; margin-top: 16px; opacity: 0.7; line-height: 1.5;">
+                      Parcours, compétences et expériences
+                    </div>
+                  </button>
+                  
+                  <button onclick="navigateTo('contact')" class="smooth-transition project-card" style="background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); color: white; border: none; border-radius: 24px; padding: 56px 40px; font-size: ${baseFontSize * 1.375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 12px 40px rgba(245, 116, 171, 0.45); position: relative; overflow: hidden; text-align: center;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background-color: white; opacity: 0.15; border-radius: 50%;"></div>
+                    <div style="font-size: ${baseFontSize * 3.5}px; margin-bottom: 20px;">📧</div>
+                    Me Contacter
+                    <div style="font-size: ${baseFontSize * 0.9}px; font-weight: 400; margin-top: 16px; opacity: 0.95; line-height: 1.5;">
+                      Discutons ensemble
+                    </div>
+                  </button>
+                  
+                </div>
+              </section>
+            </div>
+          </div>
+        `;
+      } else if (currentPage === 'projets') {
+        content = `
+          <div style="background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; min-height: 100%;">
+            ${renderNav(config, fontFamily, baseFontSize, textColor, primaryColor)}
+            
+            <div class="fade-in" style="max-width: 1200px; margin: 0 auto; padding: 100px 32px 64px; position: relative;">
+              
+              <!-- Stickers décoratifs -->
+              <div class="sticker" style="top: 50%; left: 3%; animation-delay: 1.5s; font-size: ${baseFontSize * 1.8}px;">💡</div>
+              
+              <div style="text-align: center; margin-bottom: 64px;">
+                <h1 style="font-size: ${baseFontSize * 3.5}px; font-weight: 800; margin-bottom: 20px; color: ${textColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                  Mes Projets 
+                </h1>
+                <p style="font-size: ${baseFontSize * 1.25}px; color: ${textColor}; opacity: 0.7;">
+                  Découvrez mes réalisations en communication
+                </p>
+              </div>
+
+              <!-- Barre de filtres -->
+              <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 48px; flex-wrap: wrap;">
+                <button onclick="filterProjects('Tous')" id="filter-Tous" class="filter-btn" style="background-color: ${currentFilter === 'Tous' ? primaryColor : 'white'}; color: ${currentFilter === 'Tous' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Tous' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                  Tous
+                </button>
+                <button onclick="filterProjects('360°')" id="filter-360°" class="filter-btn" style="background-color: ${currentFilter === '360°' ? primaryColor : 'white'}; color: ${currentFilter === '360°' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === '360°' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                  360°
+                </button>
+                <button onclick="filterProjects('Digital')" id="filter-Digital" class="filter-btn" style="background-color: ${currentFilter === 'Digital' ? primaryColor : 'white'}; color: ${currentFilter === 'Digital' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Digital' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                  Digital
+                </button>
+                <button onclick="filterProjects('Événementiel')" id="filter-Événementiel" class="filter-btn" style="background-color: ${currentFilter === 'Événementiel' ? primaryColor : 'white'}; color: ${currentFilter === 'Événementiel' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Événementiel' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                  Événementiel
+                </button>
+                <button onclick="filterProjects('Web')" id="filter-Web" class="filter-btn" style="background-color: ${currentFilter === 'Web' ? primaryColor : 'white'}; color: ${currentFilter === 'Web' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Web' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                  Web
+<button 
+  onclick="filterProjects('Durable')" id="filter-Durable" class="filter-btn" style="background-color: ${currentFilter === 'Durable' ? primaryColor : 'white'}; color: ${currentFilter === 'Durable' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; 
+font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Durable' 
+? `0 8px 20px rgba(245, 116, 171, 0.4)`: '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                Durable
+</button>
+<button onclick="filterProjects('Crise')" id="filter-Crise" class="filter-btn" style="background-color: ${currentFilter === 'Crise' ? primaryColor : 'white'}; color: ${currentFilter === 'Crise' ? 'white' : textColor}; border: 2px solid ${primaryColor}; border-radius: 50px; padding: 12px 32px; 
+font-size: ${baseFontSize * 0.9375}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: ${currentFilter === 'Crise' 
+? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};">
+                 Crise
+</button>
+<button 
+  onclick="filterProjects('Branding')" 
+  id="filter-Branding" 
+  class="filter-btn" 
+  style="
+    background-color: ${currentFilter === 'Branding' ? primaryColor : 'white'};
+    color: ${currentFilter === 'Branding' ? 'white' : textColor};
+    border: 2px solid ${primaryColor};
+    border-radius: 50px;
+    padding: 12px 32px;
+    font-size: ${baseFontSize * 0.9375}px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: ${fontFamily}, sans-serif;
+    box-shadow: ${currentFilter === 'Branding' ? `0 8px 20px rgba(245, 116, 171, 0.4)` : '0 4px 12px rgba(0, 0, 0, 0.08)'};
+  "
+>
+  Branding
+</button>
+
+              </div>
+
+              
+              <div id="projects-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;">
+                ${projects.map(project => {
+                  const isVisible = currentFilter === 'Tous' || project.theme.includes(currentFilter);
+                  return `
+                  <button onclick="openProjectModal(${project.id})" class="project-card smooth-transition" data-themes="${project.theme.join(',')}" style="display: ${isVisible ? 'block' : 'none'}; background-color: white; border: 3px solid ${project.badgeColor}; border-radius: 24px; overflow: hidden; cursor: pointer; text-align: left; padding: 0; font-family: ${fontFamily}, sans-serif; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); position: relative;">
+                    <div style="width: 100%; height: 240px; background: linear-gradient(135deg, ${project.badgeColor}, ${primaryColor}); display: flex; align-items: center; justify-content: center; font-size: ${baseFontSize * 8}px; position: relative; overflow: hidden;">
+                      <div style="position: absolute; top: -30px; right: -30px; width: 150px; height: 150px; background-color: rgba(255, 255, 255, 0.15); border-radius: 50%;"></div>
+                      <span style="position: relative; z-index: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">
+                        ${project.image}
+                      </span>
+                    </div>
+                    <div style="padding: 28px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <p style="font-size: ${baseFontSize * 0.875}px; color: ${project.badgeColor}; font-weight: 700; background-color: ${project.badgeColor}20; padding: 6px 14px; border-radius: 20px;">
+                          ${project.badge}
+                        </p>
+                        <p style="font-size: ${baseFontSize * 0.875}px; color: ${textColor}; opacity: 0.6; font-weight: 500;">
+                          ${project.date}
+                        </p>
+                      </div>
+                      <h3 style="font-size: ${baseFontSize * 1.375}px; font-weight: 700; margin-bottom: 16px; color: ${textColor}; line-height: 1.3;">
+                        ${project.nom}
+                      </h3>
+                      <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.75; line-height: 1.6; margin-bottom: 16px;">
+                        ${project.objectif}
+                      </p>
+                      <div style="display: flex; align-items: center; color: ${primaryColor}; font-weight: 600; font-size: ${baseFontSize * 0.9375}px;">
+                        Voir les détails →
+                      </div>
+                    </div>
+                  </button>
+                `;
+                }).join('')}
+              </div>
+              
+              <!-- Bouton vers CV -->
+              <div style="text-align: center; margin-top: 80px;">
+                <button onclick="navigateTo('cv')" class="smooth-transition" style="background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); color: white; border: none; border-radius: 50px; padding: 22px 48px; font-size: ${baseFontSize * 1.25}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 15px 40px rgba(245, 116, 171, 0.5); display: inline-flex; align-items: center; gap: 12px;">
+                  <span>Découvrir mon parcours complet</span>
+                  <span style="font-size: ${baseFontSize * 1.5}px;"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentPage === 'cv') {
+        content = `
+          <div style="background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; min-height: 100%;">
+            ${renderNav(config, fontFamily, baseFontSize, textColor, primaryColor)}
+            
+            <div class="fade-in" style="max-width: 1200px; margin: 0 auto; padding: 100px 32px 64px;">
+              
+              <!-- Header CV -->
+              <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 56px; margin-bottom: 80px; align-items: center;">
+                <div style="text-align: center;">
+                  <div style="width: 220px; height: 220px; border-radius: 50%; background: linear-gradient(135deg, ${primaryColor}, #FFB6D9); display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: ${baseFontSize * 6}px; box-shadow: 0 15px 50px rgba(245, 116, 171, 0.3); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%;"></div>
+                    
+                  </div>
+                  <h1 style="font-size: ${baseFontSize * 2}px; font-weight: 800; margin-bottom: 8px; color: ${textColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ${config.prenom || defaultConfig.prenom} ${config.nom || defaultConfig.nom}
+                  </h1>
+                  <p style="font-size: ${baseFontSize * 1.125}px; color: ${primaryColor}; font-weight: 600;">
+                    Étudiante en Communication
+                  </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, ${surfaceColor}, white); border-radius: 20px; padding: 40px; border: 3px solid ${primaryColor};">
+                  <h2 style="font-size: ${baseFontSize * 1.75}px; font-weight: 700; margin-bottom: 20px; color: ${primaryColor};">
+                    À propos
+                  </h2>
+                  <p style="font-size: ${baseFontSize * 1.0625}px; line-height: 1.8; color: ${textColor};">
+                    ${config.presentation_text || defaultConfig.presentation_text}
+                  </p>
+
+                   <!-- Bouton télécharger CV -->
+  <a 
+    href="img/CV.pdf" 
+    download
+    style="
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: ${primaryColor};
+      color: white;
+      font-weight: 600;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    "
+  >
+    Télécharger mon CV
+  </a>
+                </div>
+              </div>
+              
+              <!-- Formations -->
+              <div style="background-color: white; border-radius: 24px; padding: 48px; margin-bottom: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                <h2 style="font-size: ${baseFontSize * 2}px; font-weight: 700; margin-bottom: 36px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                  🎓 Formations
+                </h2>
+                
+                <!-- BUT Information-Communication -->
+                <div style="margin-bottom: 28px; padding-bottom: 28px; border-bottom: 2px dashed ${surfaceColor}; position: relative; padding-left: 32px;">
+                  <div style="position: absolute; left: 0; top: 6px; font-size: ${baseFontSize * 1.2}px;">→</div>
+                  <h3 style="font-size: ${baseFontSize * 1.25}px; font-weight: 700; margin-bottom: 10px; color: ${textColor};">
+                    BUT Information-Communication
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.7; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <span>IUT de Montreuil · 2025</span>
+                    <span style="background-color: ${primaryColor}; color: white; padding: 2px 10px; border-radius: 16px; font-size: ${baseFontSize * 0.75}px; font-weight: 700;">En cours</span>
+                  </p>
+                </div>
+                
+                <!-- BTS Communication -->
+                <div style="margin-bottom: 28px; padding-bottom: 28px; border-bottom: 2px dashed ${surfaceColor}; position: relative; padding-left: 32px;">
+                  <div style="position: absolute; left: 0; top: 6px; font-size: ${baseFontSize * 1.2}px;">→</div>
+                  <h3 style="font-size: ${baseFontSize * 1.25}px; font-weight: 700; margin-bottom: 10px; color: ${textColor};">
+                    BTS Communication
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.7;">
+                    ENC Bessières · 2023 - 2025
+                  </p>
+                </div>
+                
+                <!-- Baccalauréat Général -->
+                <div style="margin-bottom: 0; position: relative; padding-left: 32px;">
+                  <div style="position: absolute; left: 0; top: 6px; font-size: ${baseFontSize * 1.2}px;">→</div>
+                  <h3 style="font-size: ${baseFontSize * 1.25}px; font-weight: 700; margin-bottom: 10px; color: ${textColor};">
+                    Baccalauréat Général
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.7; margin-bottom: 12px;">
+                    Lycée Eugène Henaff · 2020 - 2023
+                  </p>
+                  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span style="background: linear-gradient(135deg, ${primaryColor}20, ${secondaryColor}15); color: ${textColor}; padding: 6px 16px; border-radius: 20px; font-size: ${baseFontSize * 0.8125}px; font-weight: 600; border: 2px solid ${primaryColor}40;">Anglais monde contemporain</span>
+                    <span style="background: linear-gradient(135deg, ${primaryColor}20, ${secondaryColor}15); color: ${textColor}; padding: 6px 16px; border-radius: 20px; font-size: ${baseFontSize * 0.8125}px; font-weight: 600; border: 2px solid ${primaryColor}40;">SES</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Compétences -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 40px;">
+                <div style="background-color: white; border-radius: 24px; padding: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 3px solid ${primaryColor};">
+                  <h2 style="font-size: ${baseFontSize * 1.75}px; font-weight: 700; margin-bottom: 28px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    💼 Hard Skills
+                  </h2>
+                  <ul style="list-style: none; padding: 0;">
+                    ${hardSkills.map(skill => `
+                      <li style="font-size: ${baseFontSize * 0.9375}px; padding: 10px 0; color: ${textColor}; display: flex; align-items: center; gap: 12px;">
+                        <span style="width: 8px; height: 8px; background-color: ${primaryColor}; border-radius: 50%; display: inline-block;"></span>
+                        ${skill}
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+                
+                <div style="background-color: white; border-radius: 24px; padding: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 3px solid ${secondaryColor};">
+                  <h2 style="font-size: ${baseFontSize * 1.75}px; font-weight: 700; margin-bottom: 28px; color: ${secondaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ✨ Soft Skills
+                  </h2>
+                  <ul style="list-style: none; padding: 0;">
+                    ${softSkills.map(skill => `
+                      <li style="font-size: ${baseFontSize * 0.9375}px; padding: 10px 0; color: ${textColor}; display: flex; align-items: center; gap: 12px;">
+                        <span style="width: 8px; height: 8px; background-color: ${secondaryColor}; border-radius: 50%; display: inline-block;"></span>
+                        ${skill}
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- Outils -->
+              <div style="background-color: white; border-radius: 24px; padding: 48px; margin-bottom: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                <h2 style="font-size: ${baseFontSize * 2}px; font-weight: 700; margin-bottom: 36px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                         Outils Maîtrisés
+                </h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+                  ${outils.map(outil => `
+                    <span style="background: linear-gradient(135deg, ${primaryColor}15, ${secondaryColor}15); color: ${textColor}; padding: 12px 24px; border-radius: 30px; font-size: ${baseFontSize * 0.9375}px; font-weight: 600; border: 2px solid ${primaryColor}40; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                      <span style="font-weight: 700;">${outil.nom}</span>
+                      <span style="font-size: ${baseFontSize * 0.75}px; opacity: 0.7;">${outil.niveau}</span>
+                    </span>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Expériences Professionnelles avec Timeline -->
+              <div style="background-color: white; border-radius: 24px; padding: 48px; margin-bottom: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                <h2 style="font-size: ${baseFontSize * 2}px; font-weight: 700; margin-bottom: 48px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                  💼 Expériences Professionnelles
+                </h2>
+                <div style="position: relative; padding-left: 40px;">
+                  <!-- Ligne verticale de la timeline -->
+                  <div style="position: absolute; left: 15px; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, ${primaryColor}, ${secondaryColor});"></div>
+                  
+                  ${experiences.map((exp, index) => `
+                    <div style="position: relative; margin-bottom: ${index === experiences.length - 1 ? '0' : '48px'};">
+                      <!-- Point de la timeline -->
+                      <div style="position: absolute; left: -32px; top: 8px; width: 16px; height: 16px; background-color: ${primaryColor}; border: 4px solid white; border-radius: 50%; box-shadow: 0 0 0 3px ${primaryColor}40;"></div>
+                      
+                      <div style="background: linear-gradient(135deg, ${surfaceColor}, white); border-radius: 16px; padding: 28px; border-left: 4px solid ${primaryColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                          <div>
+                            <h3 style="font-size: ${baseFontSize * 1.25}px; font-weight: 700; margin-bottom: 8px; color: ${textColor};">
+                              ${exp.poste}
+                            </h3>
+                            <p style="font-size: ${baseFontSize * 1.0625}px; color: ${primaryColor}; font-weight: 600;">
+                              ${exp.entreprise}
+                            </p>
+                          </div>
+                          <div style="background-color: ${primaryColor}; color: white; padding: 8px 20px; border-radius: 25px; font-size: ${baseFontSize * 0.875}px; font-weight: 700; white-space: nowrap;">
+                            📅 ${exp.dates}
+                          </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                          <p style="font-size: ${baseFontSize * 0.875}px; color: ${primaryColor}; font-weight: 700; margin-bottom: 12px;">
+                            Missions réalisées :
+                          </p>
+                          <ul style="list-style: none; padding: 0; margin: 0;">
+                            ${exp.missions.map(mission => `
+                              <li style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.8; line-height: 1.7; margin-bottom: 10px; padding-left: 24px; position: relative;">
+                                <span style="position: absolute; left: 0; top: 6px; width: 6px; height: 6px; background-color: ${primaryColor}; border-radius: 50%;"></span>
+                                ${mission}
+                              </li>
+                            `).join('')}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Projets Scolaires avec Timeline -->
+              <div style="background-color: white; border-radius: 24px; padding: 48px; margin-bottom: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                <h2 style="font-size: ${baseFontSize * 2}px; font-weight: 700; margin-bottom: 48px; color: ${secondaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                  📚 Projets Scolaires
+                </h2>
+                <div style="position: relative; padding-left: 40px;">
+                  <!-- Ligne verticale de la timeline -->
+                  <div style="position: absolute; left: 15px; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, ${secondaryColor}, ${primaryColor});"></div>
+                  
+                  ${projetsScolaires.map((projet, index) => `
+                    <div style="position: relative; margin-bottom: ${index === projetsScolaires.length - 1 ? '0' : '48px'};">
+                      <!-- Point de la timeline -->
+                      <div style="position: absolute; left: -32px; top: 8px; width: 16px; height: 16px; background-color: ${secondaryColor}; border: 4px solid white; border-radius: 50%; box-shadow: 0 0 0 3px ${secondaryColor}40;"></div>
+                      
+                      <div style="background: linear-gradient(135deg, ${surfaceColor}, white); border-radius: 16px; padding: 28px; border-left: 4px solid ${secondaryColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                          <div>
+                            <h3 style="font-size: ${baseFontSize * 1.25}px; font-weight: 700; margin-bottom: 8px; color: ${textColor};">
+                              ${projet.poste}
+                            </h3>
+                            <p style="font-size: ${baseFontSize * 1.0625}px; color: ${secondaryColor}; font-weight: 600;">
+                              ${projet.entreprise}
+                            </p>
+                          </div>
+                          <div style="background-color: ${secondaryColor}; color: white; padding: 8px 20px; border-radius: 25px; font-size: ${baseFontSize * 0.875}px; font-weight: 700; white-space: nowrap;">
+                            📅 ${projet.dates}
+                          </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                          <p style="font-size: ${baseFontSize * 0.875}px; color: ${secondaryColor}; font-weight: 700; margin-bottom: 12px;">
+                            Missions réalisées :
+                          </p>
+                          <ul style="list-style: none; padding: 0; margin: 0;">
+                            ${projet.missions.map(mission => `
+                              <li style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.8; line-height: 1.7; margin-bottom: 10px; padding-left: 24px; position: relative;">
+                                <span style="position: absolute; left: 0; top: 6px; width: 6px; height: 6px; background-color: ${secondaryColor}; border-radius: 50%;"></span>
+                                ${mission}
+                              </li>
+                            `).join('')}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Langues et Intérêts -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 40px;">
+                <div style="background-color: white; border-radius: 24px; padding: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                  <h2 style="font-size: ${baseFontSize * 1.75}px; font-weight: 700; margin-bottom: 28px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    🌍 Langues
+                  </h2>
+                  ${langues.map(langue => `
+                    <div style="margin-bottom: 20px;">
+                      <p style="font-size: ${baseFontSize * 1.0625}px; font-weight: 700; color: ${textColor};">
+                        ${langue.langue}
+                      </p>
+                      <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.7;">
+                        ${langue.niveau}
+                      </p>
+                    </div>
+                  `).join('')}
+                </div>
+                
+                <div style="background-color: white; border-radius: 24px; padding: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); border: 2px solid ${surfaceColor};">
+                  <h2 style="font-size: ${baseFontSize * 1.75}px; font-weight: 700; margin-bottom: 28px; color: ${primaryColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    🎨 Centres d'intérêt
+                  </h2>
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    ${interets.map(interet => `
+                      <span style="background-color: ${surfaceColor}; color: ${textColor}; padding: 10px 20px; border-radius: 25px; font-size: ${baseFontSize * 0.9375}px; font-weight: 500;">
+                        ${interet}
+                      </span>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Bouton vers Contact -->
+              <div style="text-align: center; margin-top: 64px;">
+                <button onclick="navigateTo('contact')" class="smooth-transition" style="background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); color: white; border: none; border-radius: 50px; padding: 22px 48px; font-size: ${baseFontSize * 1.25}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 15px 40px rgba(245, 116, 171, 0.5); display: inline-flex; align-items: center; gap: 12px;">
+                  <span>Me contacter</span>
+                  <span style="font-size: ${baseFontSize * 1.5}px;">✉️</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentPage === 'contact') {
+        content = `
+          <div style="background: linear-gradient(135deg, ${backgroundColor}, ${surfaceColor}); color: ${textColor}; font-family: ${fontFamily}, sans-serif; min-height: 100%; position: relative; overflow: hidden;">
+            ${renderNav(config, fontFamily, baseFontSize, textColor, primaryColor)}
+            
+            <!-- Éléments décoratifs animés -->
+            <div class="sticker" style="top: 30%; right: 8%; animation-delay: 1s; font-size: ${baseFontSize * 2.5}px;">✨</div>
+            <div class="sticker" style="bottom: 20%; left: 10%; animation-delay: 2s; font-size: ${baseFontSize * 2}px;"></div>
+            <div class="sticker" style="bottom: 40%; right: 5%; animation-delay: 1.5s; font-size: ${baseFontSize * 2.5}px;"></div>
+            
+            <div class="fade-in" style="max-width: 1400px; margin: 0 auto; padding: 100px 32px 80px;">
+              
+              <!-- Header moderne et dynamique -->
+              <div style="text-align: center; margin-bottom: 80px; position: relative;">
+                <div style="display: inline-block; background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); padding: 10px 28px; border-radius: 50px; margin-bottom: 24px; font-size: ${baseFontSize * 0.875}px; color: white; font-weight: 700; box-shadow: 0 8px 24px rgba(245, 116, 171, 0.4);">
+                  Contact
+                </div>
+                <h1 style="font-size: ${baseFontSize * 4}px; font-weight: 800; margin-bottom: 24px; color: ${textColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif; line-height: 1.2;">
+                  Travaillons<br>
+                  <span style="background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ensemble</span> 
+                </h1>
+                <p style="font-size: ${baseFontSize * 1.25}px; color: ${textColor}; opacity: 0.7; max-width: 600px; margin: 0 auto;">
+                  Une opportunité de stage ? Une collaboration ? Je suis disponible et motivée !
+                </p>
+              </div>
+              
+              <!-- Grille moderne avec cartes interactives -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 32px; margin-bottom: 64px;">
+                
+                <!-- Carte Email -->
+                <div class="project-card smooth-transition" style="background: white; border-radius: 28px; padding: 48px 40px; text-align: center; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); border: 3px solid ${primaryColor}; position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: ${primaryColor}; opacity: 0.08; border-radius: 50%;"></div>
+                  <div style="width: 90px; height: 90px; background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: ${baseFontSize * 2.5}px; box-shadow: 0 12px 30px rgba(245, 116, 171, 0.4);">
+                    📧
+                  </div>
+                  <h3 style="font-size: ${baseFontSize * 1.5}px; font-weight: 700; margin-bottom: 16px; color: ${textColor};">
+                    Email
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.6; margin-bottom: 20px; line-height: 1.6;">
+                    Réponse sous 24h
+                  </p>
+                  <a href="mailto:${config.email || defaultConfig.email}" style="font-size: ${baseFontSize * 1.0625}px; font-weight: 600; color: ${primaryColor}; text-decoration: none; word-break: break-all;">
+                    ${config.email || defaultConfig.email}
+                  </a>
+                </div>
+                
+                <!-- Carte Téléphone -->
+                <div class="project-card smooth-transition" style="background: white; border-radius: 28px; padding: 48px 40px; text-align: center; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); border: 3px solid ${secondaryColor}; position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: ${secondaryColor}; opacity: 0.08; border-radius: 50%;"></div>
+                  <div style="width: 90px; height: 90px; background: linear-gradient(135deg, ${secondaryColor}, #C4E8E9); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: ${baseFontSize * 2.5}px; box-shadow: 0 12px 30px rgba(168, 218, 220, 0.4);">
+                    📱
+                  </div>
+                  <h3 style="font-size: ${baseFontSize * 1.5}px; font-weight: 700; margin-bottom: 16px; color: ${textColor};">
+                    Téléphone
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.6; margin-bottom: 20px; line-height: 1.6;">
+                    Disponible 9h-18h
+                  </p>
+                  <a href="tel:${(config.telephone || defaultConfig.telephone).replace(/\./g, '')}" style="font-size: ${baseFontSize * 1.0625}px; font-weight: 600; color: ${secondaryColor}; text-decoration: none;">
+                    ${config.telephone || defaultConfig.telephone}
+                  </a>
+                </div>
+                
+                <!-- Carte LinkedIn -->
+                <div class="project-card smooth-transition" style="background: white; border-radius: 28px; padding: 48px 40px; text-align: center; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); border: 3px solid #0077B5; position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: #0077B5; opacity: 0.08; border-radius: 50%;"></div>
+                  <div style="width: 90px; height: 90px; background: linear-gradient(135deg, #0077B5, #00A0DC); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: ${baseFontSize * 2.5}px; box-shadow: 0 12px 30px rgba(0, 119, 181, 0.4);">
+                    💼
+                  </div>
+                  <h3 style="font-size: ${baseFontSize * 1.5}px; font-weight: 700; margin-bottom: 16px; color: ${textColor};">
+                    LinkedIn
+                  </h3>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.6; margin-bottom: 20px; line-height: 1.6;">
+                    Réseau professionnel
+                  </p>
+                  <a href="https://${config.linkedin || defaultConfig.linkedin}" target="_blank" rel="noopener noreferrer" style="font-size: ${baseFontSize * 1.0625}px; font-weight: 600; color: #0077B5; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    Voir mon profil →
+                  </a>
+                </div>
+              </div>
+              
+              <!-- Formulaire de contact moderne -->
+              <div style="max-width: 800px; margin: 0 auto;">
+                <div style="background: white; border-radius: 32px; padding: 56px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12); border: 3px solid ${surfaceColor}; position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: ${primaryColor}; opacity: 0.05; border-radius: 50%;"></div>
+                  <div style="position: absolute; bottom: -70px; left: -70px; width: 250px; height: 250px; background: ${secondaryColor}; opacity: 0.05; border-radius: 50%;"></div>
+                  
+                  <div style="text-align: center; margin-bottom: 48px; position: relative; z-index: 1;">
+                    <h2 style="font-size: ${baseFontSize * 2.5}px; font-weight: 800; margin-bottom: 16px; color: ${textColor}; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                      Envoyez-moi un message 💬
+                    </h2>
+                    <p style="font-size: ${baseFontSize * 1.0625}px; color: ${textColor}; opacity: 0.7;">
+                      Je vous réponds rapidement, promis !      
+                    </p>
+                  </div>
+                  
+                  <form id="contactForm" style="display: flex; flex-direction: column; gap: 28px; position: relative; z-index: 1; max-height: 70vh; overflow-y: auto; padding-right: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                      <div>
+                        <label for="nom" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                          Nom complet *
+                        </label>
+                        <input type="text" id="nom" required style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; transition: all 0.3s ease; font-weight: 500;">
+                      </div>
+                      
+                      <div>
+                        <label for="emailForm" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                          Email *
+                        </label>
+                        <input type="email" id="emailForm" required style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; transition: all 0.3s ease; font-weight: 500;">
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label for="sujet" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                        Sujet
+                      </label>
+                      <input type="text" id="sujet" style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; transition: all 0.3s ease; font-weight: 500;">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                      <div>
+                        <label for="date" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                          Date
+                        </label>
+                        <input type="date" id="date" style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; transition: all 0.3s ease; font-weight: 500;">
+                      </div>
+                      
+                      <div>
+                        <label for="matiere" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                          Matière
+                        </label>
+                        <input type="text" id="matiere" style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; transition: all 0.3s ease; font-weight: 500;">
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label for="contexte" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                        Contexte
+                      </label>
+                      <textarea id="contexte" rows="4" style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; resize: vertical; transition: all 0.3s ease; font-weight: 500;"></textarea>
+                    </div>
+                    
+                    <div>
+                      <label for="objectif" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                        Objectif
+                      </label>
+                      <textarea id="objectif" rows="3" style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; resize: vertical; transition: all 0.3s ease; font-weight: 500;"></textarea>
+                    </div>
+                    
+                    <div>
+                      <label for="message" style="display: block; font-size: ${baseFontSize * 0.9375}px; font-weight: 700; margin-bottom: 12px; color: ${textColor};">
+                        Votre message *
+                      </label>
+                      <textarea id="message" rows="6" required style="width: 100%; padding: 18px 20px; border: 3px solid ${surfaceColor}; border-radius: 16px; font-size: ${baseFontSize}px; background-color: ${backgroundColor}; color: ${textColor}; font-family: ${fontFamily}, sans-serif; resize: vertical; transition: all 0.3s ease; font-weight: 500;"></textarea>
+                    </div>
+                    
+                    <button type="submit" id="submitBtn" class="smooth-transition" style="background: linear-gradient(135deg, ${primaryColor}, #FF8EC7); color: white; border: none; border-radius: 50px; padding: 22px 48px; font-size: ${baseFontSize * 1.125}px; font-weight: 700; cursor: pointer; font-family: ${fontFamily}, sans-serif; box-shadow: 0 12px 40px rgba(245, 116, 171, 0.5); width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                      <span>Envoyer le message</span>
+                      <span style="font-size: ${baseFontSize * 1.5}px;">🚀</span>
+                    </button>
+                    
+                    <div id="formMessage" style="display: none; padding: 20px; border-radius: 16px; font-size: ${baseFontSize}px; text-align: center; font-weight: 600;"></div>
+                  </form>
+                </div>
+                
+                <!-- Section encouragement -->
+                <div style="text-align: center; margin-top: 56px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);">
+                  <p style="font-size: ${baseFontSize * 1.125}px; color: ${textColor}; opacity: 0.8; line-height: 1.8; margin-bottom: 24px;">
+                    💡 <strong>Vous préférez un autre moyen ?</strong> N'hésitez pas à me contacter directement par email ou téléphone !
+                  </p>
+                  <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                    <span style="background: ${surfaceColor}; padding: 12px 24px; border-radius: 50px; font-size: ${baseFontSize * 0.9375}px; font-weight: 600; color: ${textColor};">
+                      ⚡ Réponse rapide
+                    </span>
+                    <span style="background: ${surfaceColor}; padding: 12px 24px; border-radius: 50px; font-size: ${baseFontSize * 0.9375}px; font-weight: 600; color: ${textColor};">
+                      🤝 Collaboration
+                    </span>
+                    <span style="background: ${surfaceColor}; padding: 12px 24px; border-radius: 50px; font-size: ${baseFontSize * 0.9375}px; font-weight: 600; color: ${textColor};">
+                      💼 Opportunités
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        `;
+      }
+      
+      app.innerHTML = content;
+      
+      if (currentPage === 'contact') {
+        setupContactForm(config);
+      }
+      
+      if (currentPage === 'projets') {
+        setupProjectModals(config);
+      }
+    }
+    
+    function renderNav(config, fontFamily, baseFontSize, textColor, primaryColor) {
+      return `
+        <nav style="background-color: rgba(255, 255, 255, 0.95); border-bottom: 2px solid ${config.surface_color || defaultConfig.surface_color}; padding: 20px 32px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);">
+          <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <button onclick="navigateTo('accueil')" style="background: none; border: none; font-size: ${baseFontSize * 1.375}px; font-weight: 800; color: ${primaryColor}; cursor: pointer; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+              ${config.prenom || defaultConfig.prenom} ${config.nom || defaultConfig.nom}
+            </button>
+            <div style="display: flex; gap: 40px;">
+              <button onclick="navigateTo('accueil')" class="nav-link smooth-transition" style="background: none; border: none; font-size: ${baseFontSize * 1.0625}px; color: ${textColor}; cursor: pointer; font-weight: 600; font-family: ${fontFamily}, sans-serif; padding-bottom: 4px;">
+                Accueil
+              </button>
+              <button onclick="navigateTo('projets')" class="nav-link smooth-transition" style="background: none; border: none; font-size: ${baseFontSize * 1.0625}px; color: ${textColor}; cursor: pointer; font-weight: 600; font-family: ${fontFamily}, sans-serif; padding-bottom: 4px;">
+                Projets
+              </button>
+              <button onclick="navigateTo('cv')" class="nav-link smooth-transition" style="background: none; border: none; font-size: ${baseFontSize * 1.0625}px; color: ${textColor}; cursor: pointer; font-weight: 600; font-family: ${fontFamily}, sans-serif; padding-bottom: 4px;">
+                CV
+              </button>
+              <button onclick="navigateTo('contact')" class="nav-link smooth-transition" style="background: none; border: none; font-size: ${baseFontSize * 1.0625}px; color: ${textColor}; cursor: pointer; font-weight: 600; font-family: ${fontFamily}, sans-serif; padding-bottom: 4px;">
+                Contact
+              </button>
+            </div>
+          </div>
+        </nav>
+      `;
+    }
+    
+    function setupProjectModals(config) {
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        .nav-link::after {
+          background-color: ${primaryColor};
+        }
+        button:hover:not(:disabled) {
+          opacity: 0.9 !important;
+        }
+        input:focus, textarea:focus {
+          border-color: ${primaryColor} !important;
+          outline: none;
+          box-shadow: 0 0 0 3px ${primaryColor}20 !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    window.filterProjects = function(filterTheme) {
+      currentFilter = filterTheme;
+      const projectCards = document.querySelectorAll('.project-card[data-themes]');
+      
+      projectCards.forEach(card => {
+        const themes = card.getAttribute('data-themes').split(',');
+        if (filterTheme === 'Tous' || themes.includes(filterTheme)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const config = window.elementSdk?.config || defaultConfig;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+
+      ['Tous', '360°', 'Digital', 'Événementiel', 'Web', 'Durable', 'Crise', 'Branding'].forEach(theme => {
+        const btn = document.getElementById(`filter-${theme}`);
+        if (btn) {
+          if (theme === filterTheme) {
+            btn.style.backgroundColor = primaryColor;
+            btn.style.color = 'white';
+            btn.style.boxShadow = '0 8px 20px rgba(245, 116, 171, 0.4)';
+          } else {
+            btn.style.backgroundColor = 'white';
+            btn.style.color = textColor;
+            btn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+          }
+        }
+      });
+    };
+    
+    window.openProjectModal = function(projectId) {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
+      
+      const config = window.elementSdk?.config || defaultConfig;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      
+      const modalHTML = `
+        <div class="modal-overlay" onclick="closeModal(event)">
+          <div class="modal-content" onclick="event.stopPropagation()" style="background-color: ${backgroundColor}; padding: 0; overflow-y: auto; overflow-x: hidden;">
+            <div style="width: 100%; height: 300px; background: linear-gradient(135deg, ${project.badgeColor}, ${primaryColor}); display: flex; align-items: center; justify-content: center; font-size: ${baseFontSize * 10}px; position: relative;">
+              <div style="position: absolute; top: -30px; right: -30px; width: 150px; height: 150px; background-color: rgba(255, 255, 255, 0.15); border-radius: 50%;"></div>
+              <span style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">${project.image}</span>
+            </div>
+            <div style="padding: 40px;">
+              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+                <div>
+                  <span style="background-color: ${project.badgeColor}20; color: ${project.badgeColor}; padding: 8px 16px; border-radius: 20px; font-size: ${baseFontSize * 0.875}px; font-weight: 700; display: inline-block; margin-bottom: 16px;">
+                    ${project.badge}
+                  </span>
+                  <h2 style="font-size: ${baseFontSize * 2}px; font-weight: 800; color: ${textColor}; margin-bottom: 8px; font-family: 'Space Grotesk', ${fontFamily}, sans-serif;">
+                    ${project.nom}
+                  </h2>
+                  <p style="font-size: ${baseFontSize * 0.9375}px; color: ${textColor}; opacity: 0.6; font-weight: 500;">
+                    ${project.date}
+                  </p>
+                </div>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: ${baseFontSize * 1.5}px; cursor: pointer; color: ${textColor}; opacity: 0.6; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease;">
+                  ✕
+                </button>
+              </div>
+              
+              <div style="margin-bottom: 24px;">
+                <h3 style="font-size: ${baseFontSize * 1.125}px; font-weight: 700; color: ${primaryColor}; margin-bottom: 12px;">
+                  🎯 Objectif
+                </h3>
+                <p style="font-size: ${baseFontSize}px; line-height: 1.7; color: ${textColor};">
+                  ${project.objectif}
+                </p>
+              </div>
+              
+              <div style="margin-bottom: 24px;">
+                <h3 style="font-size: ${baseFontSize * 1.125}px; font-weight: 700; color: ${primaryColor}; margin-bottom: 12px;">
+                  👥 Cible
+                </h3>
+                <p style="font-size: ${baseFontSize}px; line-height: 1.7; color: ${textColor};">
+                  ${project.cible}
+                </p>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, ${project.badgeColor}15, ${primaryColor}10); border-radius: 16px; padding: 24px; border: 2px solid ${project.badgeColor};">
+                <h3 style="font-size: ${baseFontSize * 1.125}px; font-weight: 700; color: ${project.badgeColor}; margin-bottom: 16px;">
+                  ✅ Mes missions
+                </h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  ${project.missionsList.map(mission => `
+                    <li style="font-size: ${baseFontSize}px; line-height: 1.7; color: ${textColor}; margin-bottom: 12px; padding-left: 24px; position: relative;">
+                      <span style="position: absolute; left: 0; top: 6px; width: 8px; height: 8px; background-color: ${project.badgeColor}; border-radius: 50%;"></span>
+                      ${mission}
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+              
+              ${project.lienVisuel ? `
+              <div style="margin-top: 32px; text-align: center;">
+                <a href="${project.lienVisuel}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(135deg, ${project.badgeColor}, ${primaryColor}); color: white; padding: 18px 36px; border-radius: 50px; font-size: ${baseFontSize * 1.125}px; font-weight: 600; text-decoration: none; box-shadow: 0 8px 24px ${project.badgeColor}60; transition: all 0.3s ease;">
+                  <span>🎨</span>
+                  <span>Voir le visuel du projet</span>
+                  <span>→</span>
+                </a>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const modalContainer = document.createElement('div');
+      modalContainer.id = 'projectModal';
+      modalContainer.innerHTML = modalHTML;
+      document.body.appendChild(modalContainer);
+      activeModal = modalContainer;
+    };
+    
+    window.closeModal = function(event) {
+      if (event && event.target.className !== 'modal-overlay') return;
+      if (activeModal) {
+        activeModal.remove();
+        activeModal = null;
+      }
+    };
+    
+    function setupContactForm(config) {
+      const form = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const formMessage = document.getElementById('formMessage');
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi en cours... ⏳';
+        submitBtn.style.opacity = '0.6';
+        
+        const formData = {
+          nom: document.getElementById('nom').value,
+          email: document.getElementById('emailForm').value,
+          sujet: document.getElementById('sujet').value,
+          date_soumission: document.getElementById('date').value,
+          matiere: document.getElementById('matiere').value,
+          contexte: document.getElementById('contexte').value,
+          objectif: document.getElementById('objectif').value,
+          message: document.getElementById('message').value,
+          date_creation: new Date().toISOString()
+        };
+        
+        const result = await window.dataSdk.create(formData);
+        
+        if (result.isOk) {
+          formMessage.style.display = 'block';
+          formMessage.style.backgroundColor = `${primaryColor}20`;
+          formMessage.style.color = primaryColor;
+          formMessage.style.border = `2px solid ${primaryColor}`;
+          formMessage.textContent = '✓ Message envoyé avec succès ! Je vous recontacte très vite 🎉';
+          form.reset();
+        } else {
+          formMessage.style.display = 'block';
+          formMessage.style.backgroundColor = '#ff000020';
+          formMessage.style.color = '#ff0000';
+          formMessage.style.border = '2px solid #ff0000';
+          formMessage.textContent = '✗ Erreur lors de l\'envoi. Veuillez réessayer.';
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer le message 🚀';
+        submitBtn.style.opacity = '1';
+        
+        setTimeout(() => {
+          formMessage.style.display = 'none';
+        }, 5000);
+      });
+      
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+          this.style.setProperty('--hover-color', primaryColor);
+        });
+        link.style.setProperty('--hover-color', primaryColor);
+      });
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        .nav-link::after {
+          background-color: ${primaryColor};
+        }
+        button:hover:not(:disabled) {
+          opacity: 0.9 !important;
+        }
+        input:focus, textarea:focus {
+          border-color: ${primaryColor} !important;
+          outline: none;
+          box-shadow: 0 0 0 3px ${primaryColor}20 !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    window.navigateTo = function(page) {
+      currentPage = page;
+      currentFilter = 'Tous';
+      renderPage();
+      window.scrollTo(0, 0);
+    };
+    
+    window.scrollToAbout = function() {
+      setTimeout(() => {
+        const aboutSection = document.getElementById('about-section');
+        if (aboutSection) {
+          aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    };
+    
+    const dataHandler = {
+      onDataChanged(data) {
+        // Les messages sont stockés mais pas affichés
+      }
+    };
+    
+    async function initApp() {
+      if (window.dataSdk) {
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.error("Erreur lors de l'initialisation du SDK");
+        }
+      }
+      
+      if (window.elementSdk) {
+        await window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                }
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  config.surface_color = value;
+                  window.elementSdk.setConfig({ surface_color: value });
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                }
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  config.primary_action_color = value;
+                  window.elementSdk.setConfig({ primary_action_color: value });
+                }
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => {
+                  config.secondary_action_color = value;
+                  window.elementSdk.setConfig({ secondary_action_color: value });
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                config.font_family = value;
+                window.elementSdk.setConfig({ font_family: value });
+              }
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                config.font_size = value;
+                window.elementSdk.setConfig({ font_size: value });
+              }
+            }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["prenom", config.prenom || defaultConfig.prenom],
+            ["nom", config.nom || defaultConfig.nom],
+            ["presentation_title", config.presentation_title || defaultConfig.presentation_title],
+            ["presentation_text", config.presentation_text || defaultConfig.presentation_text],
+            ["vision_title", config.vision_title || defaultConfig.vision_title],
+            ["vision_text", config.vision_text || defaultConfig.vision_text],
+            ["telephone", config.telephone || defaultConfig.telephone],
+            ["email", config.email || defaultConfig.email],
+            ["linkedin", config.linkedin || defaultConfig.linkedin]
+          ])
+        });
+      }
+      
+      renderPage();
+    }
+    
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bdddede653c147e',t:'MTc2ODQwMTQzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
